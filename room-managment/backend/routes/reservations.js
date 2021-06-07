@@ -8,6 +8,12 @@ router.route('/:id').get((req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
+router.route('/').get((req, res) => {
+  Reservation.find()
+    .then(reservs => res.json(reservs))
+    .catch(err => res.status(400).json('Error: ' + err));
+});
+
 router.route('/:id/add').post((req, res) => {
   const username = req.body.username;
   const from = Date.parse(req.body.from);
