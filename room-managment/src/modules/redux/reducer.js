@@ -1,7 +1,7 @@
 import axios from "axios";
 import { typeConst } from "./constants";
 export let reducer = (state = [], action) => {
-    let newReserv;
+   
     switch (action.type) {
         case typeConst.ADD_RESERV:
             axios
@@ -10,10 +10,12 @@ export let reducer = (state = [], action) => {
                     action.payload.reserv
                 )
                 .then((res) => console.log(res.data));
-            return newReserv;
+          return action.payload.reserv
         case typeConst.GET_RESERV:
-            newReserv=action.payload;         
-            return newReserv;
+          
+            return [...action.payload];
+        case typeConst.GET_ALL_RESERV:
+            return [...action.payload];
         default:
             return state;
     }

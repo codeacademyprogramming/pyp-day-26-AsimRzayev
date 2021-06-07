@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { roomsInital } from "../redux/states";
 import { Link } from "react-router-dom";
-
-
-export default function Room() {
+import {getAllReserv} from '../redux/action'
+import {connect} from 'react-redux'
+const Room=({reservs,getAllReserv})=> {
     const [rooms, setRooms] = useState(roomsInital);
     React.useEffect(()=>{
         setRooms(roomsInital)
-    },[rooms])
+        getAllReserv();
+        
+    },[rooms,getAllReserv])
+  
     return (
         <svg
             width="580px"
@@ -43,7 +46,7 @@ export default function Room() {
                                     id={room.id}
                                     data-id={room.dataId}
                                     stroke={room.stroke}
-                                    fill={room.fill}
+                                    fill={reservs.find(x=>x.roomid===room.dataId)? "red":room.fill}
                                     x={room.x}
                                     y={room.y}
                                     width={room.width}
@@ -57,3 +60,9 @@ export default function Room() {
         </svg>
     );
 }
+const mapStateProps=state=>{
+    return{
+        reservs:state
+    }
+}
+export default connect(mapStateProps,{getAllReserv})(Room)
