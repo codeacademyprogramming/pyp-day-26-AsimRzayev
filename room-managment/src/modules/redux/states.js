@@ -8,10 +8,7 @@ export let roomsInital=[
       x:"360.5",
       y:"83.5",
       width:"47",
-      height:"51",
-      reservation:[
-      
-      ]
+      height:"51"
     },
     {
         id:"Rectangle",
@@ -21,8 +18,7 @@ export let roomsInital=[
         x:"411.5",
         y:"83.5",
         width:"48",
-        height:"51",
-        reservation:[]
+        height:"51"
       },
       {
         id:"Rectangle",
@@ -32,8 +28,7 @@ export let roomsInital=[
         x:"360.5",
         y:"137.5",
         width:"47",
-        height:"47",
-        reservation:[]
+        height:"47"
       },
       {
         id:"Rectangle",
@@ -43,8 +38,7 @@ export let roomsInital=[
         x:"411.5",
         y:"137.5",
         width:"48",
-        height:"47",
-        reservation:[]
+        height:"47"
       },
       {
         id:"Rectangle",
@@ -54,10 +48,7 @@ export let roomsInital=[
         x:"205.5",
         y:"226.5",
         width:"48",
-        height:"47",
-        reservation:[
-         
-        ]
+        height:"47"
       },
       {
         id:"Rectangle",
@@ -67,8 +58,7 @@ export let roomsInital=[
         x:"256.5",
         y:"226.5",
         width:"46",
-        height:"47",
-        reservation:[]
+        height:"47"
       },
       {
         id:"Rectangle",
@@ -78,8 +68,7 @@ export let roomsInital=[
         x:"305.5",
         y:"226.5",
         width:"46",
-        height:"47",
-        reservation:[]
+        height:"47"
       },
       {
         id:"Rectangle",
@@ -89,10 +78,7 @@ export let roomsInital=[
         x:"205.5",
         y:"276.5",
         width:"48",
-        height:"47",
-        reservation:[
-        
-        ]
+        height:"47"
       },
       {
         id:"Rectangle",
@@ -102,8 +88,7 @@ export let roomsInital=[
         x:"256.5",
         y:"276.5",
         width:"46",
-        height:"47",
-        reservation:[]
+        height:"47"
       },
       {
         id:"Rectangle",
@@ -113,8 +98,7 @@ export let roomsInital=[
         x:"305.5",
         y:"276.5",
         width:"46",
-        height:"47",
-        reservation:[]
+        height:"47"
       },
       {
         id:"Rectangle",
@@ -124,8 +108,7 @@ export let roomsInital=[
         x:"28.5",
         y:"17.5",
         width:"207",
-        height:"145",
-        reservation:[]
+        height:"145"
       },
       {
         id:"Rectangle",
@@ -135,8 +118,7 @@ export let roomsInital=[
         x:"20.5",
         y:"202.5",
         width:"129",
-        height:"86",
-        reservation:[]
+        height:"86"
       },
       {
         id:"Rectangle",
@@ -146,8 +128,7 @@ export let roomsInital=[
         x:"20.5",
         y:"292.5",
         width:"129",
-        height:"65",
-        reservation:[]
+        height:"65"
       },
       {
         id:"Rectangle",
@@ -157,7 +138,6 @@ export let roomsInital=[
         x:"20.5",
         y:"361.5",
         width:"129",
-        height:"61",
-        reservation:[]
+        height:"61"
       },
   ]

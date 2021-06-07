@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -8,9 +8,9 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { Link, useParams } from "react-router-dom";
-import {roomsInital} from '../redux/states'
-import axios from "axios";
-import Axios from "axios";
+import {typeConst} from '../redux/constants'
+import {getReserv} from '../redux/action'
+import {connect} from 'react-redux'
 import {
     Button,
     Dialog,
@@ -19,6 +19,7 @@ import {
     DialogTitle,
     TextField,
 } from "@material-ui/core";
+import { useDispatch } from "react-redux";
 
 const useStyles = makeStyles({
     table: {
@@ -26,31 +27,28 @@ const useStyles = makeStyles({
     },
 });
 
-export default function ReservationsList() {
-    const [rooms, setRooms] = useState(roomsInital)
-    Axios({
-      method: "GET",
-      url: "http://localhost:5000/rooms",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    }).then(res => {
-      setRooms(res.data)
-     
-    });
-
+const ReservationsList=({reservs,getReserv})=> {
  
-    const classes = useStyles();
+    
+    const [reservations, setReservations] = useState([]);
     const { id } = useParams();
-    const currentRoom = React.useMemo(() => {
-        return rooms.find((room) => room.dataId === Number(id));
-    }, [id, rooms]);
+    const dispatch=useDispatch();
+    
+    useEffect(() => {
+     getReserv(id)
+    setReservations(reservs)
+    }, [id,getReserv,reservs])
+    
+    const classes = useStyles();
+
+
     const [open, setOpen] = React.useState(false);
-   const [name, setName] = React.useState("");
-   const [fromData, setFromData] = React.useState('2017-05-24T10:30');
-   const [toData, setToData] = React.useState('2017-05-24T10:30');
-   const [note, setNote] = React.useState("");
-let newID=currentRoom.reservation.length+1;
+    const [name, setName] = React.useState("");
+    const [fromData, setFromData] = React.useState("2017-05-24T10:30");
+    const [toData, setToData] = React.useState("2017-05-24T10:30");
+    const [note, setNote] = React.useState("");
+
+
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -58,25 +56,19 @@ let newID=currentRoom.reservation.length+1;
     const handleClose = () => {
         setOpen(false);
     };
-    
-  const handleAddReserv=()=>{
 
-   
-    axios({
-        method: 'post',
-        url: `http://localhost:5000/rooms/${id}`,
-        data: {
-            reservedBy: name,
-            from: fromData, // Date
-            to: toData, // Date
-            notes: note
-        },
-        headers: {
-            "Content-Type": "application/json"
-          }
-      });
-    handleClose()
-  }
+    const handleAddReserv = () => {
+        const reserv={
+            username:name,
+            from:fromData,
+            to:toData,
+            note:note
+        }
+     
+        dispatch({ type: typeConst.ADD_RESERV, payload: {id,reserv} })
+        handleClose();
+    };
+
     return (
         <TableContainer component={Paper}>
             <Button
@@ -84,53 +76,64 @@ let newID=currentRoom.reservation.length+1;
                 color="primary"
                 onClick={handleClickOpen}
             >
-              Add Reservation
+                Add Reservation
             </Button>
-          
-            <Link style={{marginLeft:"20px"}} id="goBtn" to="/">
-              Go Back
+
+            <Link style={{ marginLeft: "20px" }} id="goBtn" to="/">
+                Go Back
             </Link>
             <Dialog
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="form-dialog-title"
             >
-                <DialogTitle id="form-dialog-title">Add Reservation</DialogTitle>
+                <DialogTitle id="form-dialog-title">
+                    Add Reservation
+                </DialogTitle>
                 <DialogContent>
-                <TextField id="standard-basic"  onChange={(evt)=>setName(evt.target.value)} label="Name" />
-                <br/>   <br/>
+                    <TextField
+                        id="name"
+                        onChange={(evt) => setName(evt.target.value)}
+                        label="Name"
+                    />
+                    <br /> <br />
                     <TextField
                         id="fromDate"
                         label="From"
                         type="datetime-local"
                         defaultValue="2017-05-24T10:30"
-                        onChange={(evt)=>setFromData(evt.target.value)}
+                        onChange={(evt) => setFromData(evt.target.value)}
                         className={classes.textField}
                         InputLabelProps={{
                             shrink: true,
                         }}
                     />
-                    <br/>   <br/>
-                     <TextField
+                    <br /> <br />
+                    <TextField
                         id="ToDate"
                         label="To"
                         type="datetime-local"
                         defaultValue="2017-05-24T10:30"
-                        onChange={(evt)=>setToData(evt.target.value)}
+                        onChange={(evt) => setToData(evt.target.value)}
                         className={classes.textField}
                         InputLabelProps={{
                             shrink: true,
                         }}
                     />
-                    <br/><br/>
-                     <TextField id="standard-basic" onChange={(evt)=>setNote(evt.target.value)} label="Note" />
+                    <br />
+                    <br />
+                    <TextField
+                        id="standard-basic"
+                        onChange={(evt) => setNote(evt.target.value)}
+                        label="Note"
+                    />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
                         Cancel
                     </Button>
                     <Button onClick={handleAddReserv} color="primary">
-                     Add
+                        Add
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -150,27 +153,34 @@ let newID=currentRoom.reservation.length+1;
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {currentRoom &&
-                        currentRoom.reservation.map((reserv) => (
-                            <TableRow key={reserv.id}>
+                 {reservations &&
+                        reservations.map((reserv) => (
+                            <TableRow key={reserv._id}>
                                 <TableCell component="th" scope="row">
-                                    {reserv.id}
+                                    {reserv._id}
                                 </TableCell>
-                                <TableCell align="right">{id}</TableCell>
+                                <TableCell align="right">{reserv.roomid}</TableCell>
                                 <TableCell align="right">
-                                    {reserv.reservedBy}
+                                    {reserv.username}
                                 </TableCell>
                                 <TableCell align="right">
                                     {reserv.from}
                                 </TableCell>
                                 <TableCell align="right">{reserv.to}</TableCell>
                                 <TableCell align="right">
-                                    {reserv.notes}
+                                    {reserv.note}
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        ))} 
                 </TableBody>
             </Table>
         </TableContainer>
     );
 }
+
+const mapStateProps=state=>{
+    return{
+        reservs:state
+    }
+}
+export default connect(mapStateProps,{getReserv})(ReservationsList)
