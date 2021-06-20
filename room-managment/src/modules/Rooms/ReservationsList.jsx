@@ -34,7 +34,7 @@ const ReservationsList = ({ reservs, getReserv, getAllReserv }) => {
 
     useEffect(() => {
         getReserv(id);
-    }, [id, getReserv]);
+    }, [id, getReserv, reservs]);
 
     const classes = useStyles();
 
@@ -64,7 +64,7 @@ const ReservationsList = ({ reservs, getReserv, getAllReserv }) => {
         dispatch({ type: typeConst.GET_ALL_RESERV, payload: reservs });
         handleClose();
     }, [dispatch, fromData, id, name, note, reservs, toData]);
-    console.log(reservs);
+
     return (
         <TableContainer component={Paper}>
             <Button
