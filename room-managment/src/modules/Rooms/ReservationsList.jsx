@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useCallback } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -8,9 +8,10 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { Link, useParams } from "react-router-dom";
-import {typeConst} from '../redux/constants'
-import {getReserv} from '../redux/action'
-import {connect} from 'react-redux'
+import { typeConst } from "../redux/constants";
+import { getReserv } from "../redux/action";
+import { connect } from "react-redux";
+import { getAllReserv } from "../redux/action";
 import {
     Button,
     Dialog,
@@ -27,27 +28,21 @@ const useStyles = makeStyles({
     },
 });
 
-const ReservationsList=({reservs,getReserv})=> {
- 
-    
-    const [reservations, setReservations] = useState([]);
+const ReservationsList = ({ reservs, getReserv, getAllReserv }) => {
     const { id } = useParams();
-    const dispatch=useDispatch();
-    
-    useEffect(() => {
-     getReserv(id)
-    setReservations(reservs)
-    }, [id,getReserv,reservs])
-    
-    const classes = useStyles();
+    const dispatch = useDispatch();
 
+    useEffect(() => {
+        getReserv(id);
+    }, [id, getReserv]);
+
+    const classes = useStyles();
 
     const [open, setOpen] = React.useState(false);
     const [name, setName] = React.useState("");
     const [fromData, setFromData] = React.useState("2017-05-24T10:30");
     const [toData, setToData] = React.useState("2017-05-24T10:30");
     const [note, setNote] = React.useState("");
-
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -57,18 +52,19 @@ const ReservationsList=({reservs,getReserv})=> {
         setOpen(false);
     };
 
-    const handleAddReserv = () => {
-        const reserv={
-            username:name,
-            from:fromData,
-            to:toData,
-            note:note
-        }
-     
-        dispatch({ type: typeConst.ADD_RESERV, payload: {id,reserv} })
-        handleClose();
-    };
+    const handleAddReserv = useCallback(() => {
+        const reserv = {
+            username: name,
+            from: fromData,
+            to: toData,
+            note: note,
+        };
 
+        dispatch({ type: typeConst.ADD_RESERV, payload: { id, reserv } });
+        dispatch({ type: typeConst.GET_ALL_RESERV, payload: reservs });
+        handleClose();
+    }, [dispatch, fromData, id, name, note, reservs, toData]);
+    console.log(reservs);
     return (
         <TableContainer component={Paper}>
             <Button
@@ -153,13 +149,15 @@ const ReservationsList=({reservs,getReserv})=> {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                 {reservations &&
-                        reservations.map((reserv) => (
+                    {reservs &&
+                        reservs.map((reserv) => (
                             <TableRow key={reserv._id}>
                                 <TableCell component="th" scope="row">
                                     {reserv._id}
                                 </TableCell>
-                                <TableCell align="right">{reserv.roomid}</TableCell>
+                                <TableCell align="right">
+                                    {reserv.roomid}
+                                </TableCell>
                                 <TableCell align="right">
                                     {reserv.username}
                                 </TableCell>
@@ -171,16 +169,18 @@ const ReservationsList=({reservs,getReserv})=> {
                                     {reserv.note}
                                 </TableCell>
                             </TableRow>
-                        ))} 
+                        ))}
                 </TableBody>
             </Table>
         </TableContainer>
     );
-}
+};
 
-const mapStateProps=state=>{
-    return{
-        reservs:state
-    }
-}
-export default connect(mapStateProps,{getReserv})(ReservationsList)
+const mapStateProps = (state) => {
+    return {
+        reservs: state,
+    };
+};
+export default connect(mapStateProps, { getReserv, getAllReserv })(
+    ReservationsList
+);

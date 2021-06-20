@@ -1,16 +1,15 @@
 import React, { useState } from "react";
 import { roomsInital } from "../redux/states";
 import { Link } from "react-router-dom";
-import {getAllReserv} from '../redux/action'
-import {connect} from 'react-redux'
-const Room=({reservs,getAllReserv})=> {
+import { getAllReserv } from "../redux/action";
+import { connect } from "react-redux";
+const Room = ({ reservs, getAllReserv }) => {
     const [rooms, setRooms] = useState(roomsInital);
-    React.useEffect(()=>{
-        setRooms(roomsInital)
+    React.useEffect(() => {
+        setRooms(roomsInital);
         getAllReserv();
-        
-    },[rooms,getAllReserv])
-  
+    }, [rooms, getAllReserv]);
+
     return (
         <svg
             width="580px"
@@ -40,13 +39,22 @@ const Room=({reservs,getAllReserv})=> {
 
                     {rooms?.map((room) => {
                         return (
-                            <Link key={room.dataId} to={`/reservations/${room.dataId}`}>
+                            <Link
+                                key={room.dataId}
+                                to={`/reservations/${room.dataId}`}
+                            >
                                 <rect
                                     key={room.dataId}
                                     id={room.id}
                                     data-id={room.dataId}
                                     stroke={room.stroke}
-                                    fill={reservs.find(x=>x.roomid===room.dataId)? "red":room.fill}
+                                    fill={
+                                        reservs.find(
+                                            (x) => x.roomid === room.dataId
+                                        )
+                                            ? "red"
+                                            : room.fill
+                                    }
                                     x={room.x}
                                     y={room.y}
                                     width={room.width}
@@ -59,10 +67,10 @@ const Room=({reservs,getAllReserv})=> {
             </g>
         </svg>
     );
-}
-const mapStateProps=state=>{
-    return{
-        reservs:state
-    }
-}
-export default connect(mapStateProps,{getAllReserv})(Room)
+};
+const mapStateProps = (state) => {
+    return {
+        reservs: state,
+    };
+};
+export default connect(mapStateProps, { getAllReserv })(Room);
